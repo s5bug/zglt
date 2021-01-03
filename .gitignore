@@ -1,0 +1,21 @@
+
+# Created by https://www.toptal.com/developers/gitignore/api/zig,vscode
+# Edit at https://www.toptal.com/developers/gitignore?templates=zig,vscode
+
+### vscode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+### zig ###
+# Zig programming language
+
+zig-cache/
+build/
+build-*/
+docgen_tmp/
+
+# End of https://www.toptal.com/developers/gitignore/api/zig,vscode
