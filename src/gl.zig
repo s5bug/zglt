@@ -58,3 +58,7 @@ pub fn clearColor(red: f32, green: f32, blue: f32, alpha: f32) void {
 pub fn viewport(x: i32, y: i32, width: isize, height: isize) void {
     glViewport(x, y, width, height);
 }
+
+pub fn genBuffers(buffers: []GLuint) void {
+    glGenBuffers(buffers.len, buffers.ptr);
+}
