@@ -13,7 +13,7 @@ pub fn main() anyerror!void {
     const window = try glfw.createWindow(800, 600, "zglt", null, null);
     try glfw.makeContextCurrent(window);
 
-    var gl = try glt.Loader(glfw.GLFWError).init(glfw.getProcAddress);
+    var gl = try glt.Loader.init(glfw.GLFWError, glfw.getProcAddress);
     try glfw.setWindowUserPointer(window, &gl);
 
     _ = try glfw.setFramebufferSizeCallback(window, framebufferSizeCallback);
@@ -62,7 +62,7 @@ pub fn main() anyerror!void {
 }
 
 fn framebufferSizeCallback(window: *glfw.Window, width: i32, height: i32) callconv(.C) void {
-    const gl = @ptrCast(*glt.Loader(glfw.GLFWError), @alignCast(8, glfw.getWindowUserPointer(window) catch unreachable));
+    const gl = @ptrCast(*glt.Loader, @alignCast(8, glfw.getWindowUserPointer(window) catch unreachable));
     std.debug.print("window size changed: {} {}\n", .{width, height});
     gl.viewport(0, 0, 800, 600);
 }

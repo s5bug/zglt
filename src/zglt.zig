@@ -27,60 +27,55 @@ const GLLinkProgram = fn (program: GLuint) callconv(.C) void;
 const GLShaderSource = fn (shader: GLuint, count: GLsizei, string: [*]const [*:0]const GLchar, length: ?*const GLint) callconv(.C) void;
 const GLUseProgram = fn (program: GLuint) callconv(.C) void;
 
-pub fn Loader(comptime errors: type) type {
-    return struct {
-        loader: fn ([*:0]const u8) errors!GLProc,
-        clear: GLClear = undefined,
-        clearColor: GLClearColor = undefined,
-        viewport: GLViewport = undefined,
-        bindBuffer: GLBindBuffer = undefined,
-        genBuffers: GLGenBuffers = undefined,
-        bufferData: GLBufferData = undefined,
-        attachShader: GLAttachShader = undefined,
-        compileShader: GLCompileShader = undefined,
-        createProgram: GLCreateProgram = undefined,
-        createShader: GLCreateShader = undefined,
-        deleteShader: GLDeleteShader = undefined,
-        linkProgram: GLLinkProgram = undefined,
-        shaderSource: GLShaderSource = undefined,
-        useProgram: GLUseProgram = undefined,
+pub const Loader = struct {
+    clear: GLClear = undefined,
+    clearColor: GLClearColor = undefined,
+    viewport: GLViewport = undefined,
+    bindBuffer: GLBindBuffer = undefined,
+    genBuffers: GLGenBuffers = undefined,
+    bufferData: GLBufferData = undefined,
+    attachShader: GLAttachShader = undefined,
+    compileShader: GLCompileShader = undefined,
+    createProgram: GLCreateProgram = undefined,
+    createShader: GLCreateShader = undefined,
+    deleteShader: GLDeleteShader = undefined,
+    linkProgram: GLLinkProgram = undefined,
+    shaderSource: GLShaderSource = undefined,
+    useProgram: GLUseProgram = undefined,
 
-        const Self = @This();
+    const Self = @This();
 
-        pub fn init(loader: fn ([*:0]const u8) errors!GLProc) errors!Self {
-            var me: Self = Self {
-                .loader = loader,
-            };
-            try loadVersion10(&me);
-            try loadVersion15(&me);
-            try loadVersion20(&me);
-            return me;
-        }
+    pub fn init(comptime errors: type, loader: fn ([*:0]const u8) errors!GLProc) errors!Self {
+        var me: Self = .{};
+        try loadVersion10(errors, loader, &me);
+        try loadVersion15(errors, loader, &me);
+        try loadVersion20(errors, loader, &me);
+        return me;
+    }
 
-        fn loadVersion10(self: *Self) errors!void {
-            self.clear = @ptrCast(GLClear, try self.loader("glClear"));
-            self.clearColor = @ptrCast(GLClearColor, try self.loader("glClearColor"));
-            self.viewport = @ptrCast(GLViewport, try self.loader("glViewport"));
-        }
+    fn loadVersion10(comptime errors: type, loader: fn ([*:0]const u8) errors!GLProc, self: *Self) errors!void {
+        self.clear = @ptrCast(GLClear, try loader("glClear"));
+        self.clearColor = @ptrCast(GLClearColor, try loader("glClearColor"));
+        self.viewport = @ptrCast(GLViewport, try loader("glViewport"));
+    }
 
-        fn loadVersion15(self: *Self) errors!void {
-            self.bindBuffer = @ptrCast(GLBindBuffer, try self.loader("glBindBuffer"));
-            self.genBuffers = @ptrCast(GLGenBuffers, try self.loader("glGenBuffers"));
-            self.bufferData = @ptrCast(GLBufferData, try self.loader("glBufferData"));
-        }
+    fn loadVersion15(comptime errors: type, loader: fn ([*:0]const u8) errors!GLProc, self: *Self) errors!void {
+        self.bindBuffer = @ptrCast(GLBindBuffer, try loader("glBindBuffer"));
+        self.genBuffers = @ptrCast(GLGenBuffers, try loader("glGenBuffers"));
+        self.bufferData = @ptrCast(GLBufferData, try loader("glBufferData"));
+    }
 
-        fn loadVersion20(self: *Self) errors!void {
-            self.attachShader = @ptrCast(GLAttachShader, try self.loader("glAttachShader"));
-            self.compileShader = @ptrCast(GLCompileShader, try self.loader("glCompileShader"));
-            self.createProgram = @ptrCast(GLCreateProgram, try self.loader("glCreateProgram"));
-            self.createShader = @ptrCast(GLCreateShader, try self.loader("glCreateShader"));
-            self.deleteShader = @ptrCast(GLDeleteShader, try self.loader("glDeleteShader"));
-            self.linkProgram = @ptrCast(GLLinkProgram, try self.loader("glLinkProgram"));
-            self.shaderSource = @ptrCast(GLShaderSource, try self.loader("glShaderSource"));
-            self.useProgram = @ptrCast(GLUseProgram, try self.loader("glUseProgram"));
-        }
-    };
-}
+    fn loadVersion20(comptime errors: type, loader: fn ([*:0]const u8) errors!GLProc, self: *Self) errors!void {
+        self.attachShader = @ptrCast(GLAttachShader, try loader("glAttachShader"));
+        self.compileShader = @ptrCast(GLCompileShader, try loader("glCompileShader"));
+        self.createProgram = @ptrCast(GLCreateProgram, try loader("glCreateProgram"));
+        self.createShader = @ptrCast(GLCreateShader, try loader("glCreateShader"));
+        self.deleteShader = @ptrCast(GLDeleteShader, try loader("glDeleteShader"));
+        self.linkProgram = @ptrCast(GLLinkProgram, try loader("glLinkProgram"));
+        self.shaderSource = @ptrCast(GLShaderSource, try loader("glShaderSource"));
+        self.useProgram = @ptrCast(GLUseProgram, try loader("glUseProgram"));
+    }
+};
 
 pub const ColorBufferBit: GLbitfield = 1 << 14;
 
