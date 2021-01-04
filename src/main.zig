@@ -49,6 +49,9 @@ pub fn main() anyerror!void {
 
     gl.useProgram(shaderProgram);
 
+    gl.deleteShader(vertexShader);
+    gl.deleteShader(fragmentShader);
+
     while(!try glfw.windowShouldClose(window)) {
         gl.clearColor(0.2, 0.3, 0.3, 1.0);
         gl.clear(glt.ColorBufferBit);

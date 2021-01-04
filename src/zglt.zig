@@ -22,6 +22,7 @@ const GLAttachShader = fn (program: GLuint, shader: GLuint) callconv(.C) void;
 const GLCompileShader = fn (shader: GLuint) callconv(.C) void;
 const GLCreateProgram = fn () callconv(.C) GLuint;
 const GLCreateShader = fn (tpe: GLenum) callconv(.C) GLuint;
+const GLDeleteShader = fn (shader: GLuint) callconv(.C) void;
 const GLLinkProgram = fn (program: GLuint) callconv(.C) void;
 const GLShaderSource = fn (shader: GLuint, count: GLsizei, string: [*]const [*:0]const GLchar, length: ?*const GLint) callconv(.C) void;
 const GLUseProgram = fn (program: GLuint) callconv(.C) void;
@@ -39,6 +40,7 @@ pub fn Loader(comptime errors: type) type {
         compileShader: GLCompileShader = undefined,
         createProgram: GLCreateProgram = undefined,
         createShader: GLCreateShader = undefined,
+        deleteShader: GLDeleteShader = undefined,
         linkProgram: GLLinkProgram = undefined,
         shaderSource: GLShaderSource = undefined,
         useProgram: GLUseProgram = undefined,
@@ -72,6 +74,7 @@ pub fn Loader(comptime errors: type) type {
             self.compileShader = @ptrCast(GLCompileShader, try self.loader("glCompileShader"));
             self.createProgram = @ptrCast(GLCreateProgram, try self.loader("glCreateProgram"));
             self.createShader = @ptrCast(GLCreateShader, try self.loader("glCreateShader"));
+            self.deleteShader = @ptrCast(GLDeleteShader, try self.loader("glDeleteShader"));
             self.linkProgram = @ptrCast(GLLinkProgram, try self.loader("glLinkProgram"));
             self.shaderSource = @ptrCast(GLShaderSource, try self.loader("glShaderSource"));
             self.useProgram = @ptrCast(GLUseProgram, try self.loader("glUseProgram"));
